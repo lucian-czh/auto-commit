@@ -1,0 +1,25 @@
+name: Auto commit
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron:  '0 20 * * *'
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update README
+        run: node dist/index.js
+
+      - name: Push
+        run: |
+          git diff
+          git config --global user.email "varrantczh@me.com"
+          git config --global user.name "varrant"
+          git add -A
+          git commit -m "Updated Readme" || exit
+          git push
